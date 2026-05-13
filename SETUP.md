@@ -3,7 +3,7 @@
 
 ---
 
-## YOUR CURRENT STATUS (from screenshots)
+##  CURRENT STATUS (from screenshots)
 
 ✅ Build pipeline works (clone → install → build → cleanup all succeed)  
 ✅ Wildcard A record `*` → `35.205.83.73` already in Cloudflare  
