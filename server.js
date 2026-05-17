@@ -4,67 +4,7 @@
  * streams build logs in real-time, and manages project data.
  *
  * Subdomain routing on Render/Pxxl:
- *   After each successful build, the server calls the Cloudflare API
- *   to create a CNAME + tunnel ingress for <subdomain>.joytreehostingserver.dpdns.org
- *   Static files are served directly by Express from SITES_DIR.
- */
-
-'use strict';
-
-const express   = require('express');
-const http      = require('http');
-const { Server: SocketIO } = require('socket.io');
-const path      = require('path');
-const fs        = require('fs');
-const mongoose  = require('mongoose');
-require('dotenv').config();
-
-const app    = express();
-const server = http.createServer(app);
-const io     = new SocketIO(server, {
-  cors: { origin: '*', methods: ['GET','POST'] }
-});
-
-const PORT          = process.env.PORT         || 3001;
-const MONGODB_URI   = process.env.MONGODB_URI  || 'mongodb://localhost:27017/deployboard';
-const SITES_DIR     = process.env.SITES_DIR    || '/tmp/user-sites';
-const TMP_DIR       = process.env.TMP_DIR      || '/tmp/deployboard-builds';
-const RUNNER_MODE   = process.env.RUNNER       || 'local';
-const GITHUB_TOKEN  = process.env.GITHUB_TOKEN || '';
-
-// ── Cloudflare config (same credentials as Treetrodactly) ───────────────────
-const CF_API_TOKEN  = process.env.CF_API_TOKEN  || '';
-const CF_ZONE_ID    = process.env.CF_ZONE_ID    || '';
-const CF_TUNNEL_ID  = process.env.CF_TUNNEL_ID  || '';
-const CF_ACCOUNT_ID = process.env.CF_ACCOUNT_ID || '';
-const BASE_DOMAIN   = process.env.BASE_DOMAIN   || 'joytreehostingserver.dpdns.org';
-
-// ── Ensure directories exist ─────────────────────────────────────────────────
-[SITES_DIR, TMP_DIR].forEach(dir => {
-  try {
-    fs.mkdirSync(dir, { recursive: true });
-  } catch(e) {
-    if (e.code === 'EACCES' || e.code === 'EPERM') {
-      // Can't create the configured dir (e.g. /var/www/user-sites on Render/Cloud Shell)
-      // Set a fallback that buildRunner.js will use automatically
-      const fallback = dir === SITES_DIR ? '/tmp/user-sites' : '/tmp/deployboard-builds';
-      console.warn(`[DeployBoard] Warning: Cannot create ${dir} (${e.code}) — using ${fallback}`);
-      process.env.TMP_SITES_FALLBACK = '/tmp/user-sites';
-      try { fs.mkdirSync(fallback, { recursive: true }); } catch(e2) {}
-    }
-  }
-});
-
-// ── Middleware ───────────────────────────────────────────────────────────────
-app.use(express.json());
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin',  '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  if (req.method === 'OPTIONS') return res.sendStatus(204);
-  next();
-});
-
+ *   After each successful 
 // ════════════════════════════════════════════════════════════════════
 // SUBDOMAIN STATIC FILE SERVING
 //
