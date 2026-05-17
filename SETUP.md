@@ -1,5 +1,4 @@
-# DeployBoard — Complete Setup Guide
-## Google Cloud Shell + Docker + Cloudflare Wildcard Subdomains
+#  Shell + Docker + Cloudflare Wildcard Subdomains
 
 --------------------------------------------
 
